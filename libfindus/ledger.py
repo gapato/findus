@@ -1,4 +1,4 @@
-from simplejson import load
+from simplejson import load, dumps
 import logging
 logger = logging.getLogger('cli.libfindus')
 
@@ -86,13 +86,24 @@ class Ledger:
                 self.effective_debts[creditor] = creditor_debts
 
     def summary(self):
+        string = 'Debts '
         if self.reduced:
-            print('Debts (reduced)')
+            string += '(reduced)\n'
         else:
-            print('Debts (unreduced)')
+            string += '(unreduced)\n'
         for c in self.effective_debts.values():
             for d in c.values():
-                print('{0} owes {1:.2f} to {2}'.format(d.debtor, d.amount, d.creditor))
+                string += '{0} owes {1:.2f} to {2}\n'.format(d.debtor, d.amount, d.creditor)
+        return string
+
+    def _debts_list(self):
+        debts_list = []
+        for v in self.effective_debts.values():
+            debts_list.extend(list(map(lambda i:i.__dict__, v.values())))
+        return debts_list
+
+    def json_debts(self):
+        return dumps(self._debts_list())
 
     def reduce(self):
         cycles = self._find_cycles()

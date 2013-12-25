@@ -5,6 +5,7 @@
     findus reduce [options] ([-] | <json>)
 
 Options:
+  -j --json            JSON output
   -h --help            show this help message and exit
   -v --verbose         print status messages
   -d --debug           print debug messages
@@ -37,11 +38,16 @@ def main(options):
     else:
         ledger = Ledger(open(options['<json>']))
     if options['sum']:
-        ledger.summary()
+        if options['--json']:
+            print(ledger.json_debts())
+        else:
+            print(ledger.summary())
     if options['reduce']:
-        ledger.summary()
         ledger.reduce()
-        ledger.summary()
+        if options['--json']:
+            print(ledger.json_debts())
+        else:
+            print(ledger.summary())
 
 if __name__ == '__main__':
     # parse options based on docstring above
