@@ -21,6 +21,7 @@ class Payment:
                                                len(self.debtors))
 
     def make_debts(self):
+        if len(self.effective_debtors) == 0: return {}
         discrete_amount = self.effective_amount/len(self.effective_debtors)
         debts = {}
         for debtor in self.effective_debtors:
