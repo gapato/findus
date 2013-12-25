@@ -1,21 +1,21 @@
 ## Findus
 Reduce debt graphs
 
-    $ cat > test.json << EOF
+    $ findus reduce - << EOF
     [
       {
-        "buyer": "A",
+        "creditor": "A",
         "amount": 10,
-        "recipients": [
+        "debtors": [
           "A",
           "B"
         ],
         "comment": "payment 1"
       },
       {
-        "buyer": "B",
+        "creditor": "B",
         "amount": 2,
-        "recipients": [
+        "debtors": [
           "A",
           "B"
         ],
@@ -25,7 +25,7 @@ Reduce debt graphs
     EOF
 
     $ findus reduce test.json
-    Debts (rounded to the nearest cent)
+    Debts (reduced)
     B owes 4.00 to A
 
 ## License
