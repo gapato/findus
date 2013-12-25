@@ -1,4 +1,4 @@
-from simplejson import load, dumps
+from simplejson import load, loads, dumps
 import logging
 logger = logging.getLogger('cli.libfindus')
 
@@ -6,8 +6,8 @@ class Payment:
 
     def __init__(self, info):
         self.comment = info['comment']
-        self.creditor = info['buyer']
-        self.debtors = info['recipients']
+        self.creditor = info['creditor']
+        self.debtors = info['debtors']
         if len(self.debtors) == 0:
             error('Payment cannot be made to no one')
             raise ValueError
@@ -49,8 +49,11 @@ class Debt:
 
 class Ledger:
 
-    def __init__(self, buf):
-        self.data = load(buf)
+    def __init__(self, obj):
+        if obj.__class__ == str:
+            self.data = loads(obj)
+        else:
+            self.data = load(obj)
         self.reduced = False
         self.effective_debts = {}
         for p in self.data:
@@ -61,18 +64,21 @@ class Ledger:
             else:
                 continue
             for d in payment.make_debts().values():
+                logger.debug('processing '+str(d))
                 debtor = d.debtor
                 debt = ((self.effective_debts.get(debtor)
                             and self.effective_debts[debtor].get(creditor))
                             or Debt(debtor, creditor))
                 credit = creditor_debts.get(debtor)
                 if credit:
+                    logger.debug('credit: '+str(credit))
                     if credit.amount > d.amount:
                         credit.add(-d.amount)
                     else:
                         if credit.amount < d.amount:
-                            debt.add(d.amount)
+                            debt.add(d.amount-credit.amount)
                         creditor_debts.pop(debtor)
+                    logger.debug('new debt: '+str(debt))
                 else:
                     debt.add(d.amount)
                 if debt.amount > 0:
@@ -103,7 +109,7 @@ class Ledger:
         return debts_list
 
     def json_debts(self):
-        return dumps(self._debts_list())
+        return dumps(self._debts_list(), indent=True)
 
     def reduce(self):
         cycles = self._find_cycles()
