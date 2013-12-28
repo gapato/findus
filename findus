@@ -39,13 +39,13 @@ def main(options):
         ledger = Ledger(open(options['<json>']))
     if options['sum']:
         if options['--json']:
-            print(ledger.json_debts())
+            print(ledger.json())
         else:
             print(ledger.summary())
     if options['reduce']:
         ledger.reduce()
         if options['--json']:
-            print(ledger.json_debts())
+            print(ledger.json())
         else:
             print(ledger.summary())
 
