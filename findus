@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 
 """Usage:
-    findus sum [options] ([-] | <json>)
-    findus reduce [options] ([-] | <json>)
+    findus [options] ([-] | <json>)
 
 Options:
   -j --json            JSON output
@@ -37,17 +36,10 @@ def main(options):
         ledger = Ledger(sys.stdin)
     else:
         ledger = Ledger(open(options['<json>']))
-    if options['sum']:
-        if options['--json']:
-            print(ledger.json())
-        else:
-            print(ledger.summary())
-    if options['reduce']:
-        ledger.reduce()
-        if options['--json']:
-            print(ledger.json())
-        else:
-            print(ledger.summary())
+    if options['--json']:
+        print(ledger.json())
+    else:
+        print(ledger.summary())
 
 if __name__ == '__main__':
     # parse options based on docstring above

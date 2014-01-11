@@ -1,7 +1,7 @@
 ## Findus
 Reduce debt graphs
 
-    $ findus reduce - << EOF
+    $ cat test.json
     [
       {
         "creditor": "A",
@@ -22,11 +22,11 @@ Reduce debt graphs
         "comment": "payment 2"
       }
     ]
-    EOF
-
-    $ findus reduce test.json
-    Debts (reduced)
-    B owes 4.00 to A
+    
+    $ findus test.json
+    B owes 4.00:
+        4.00 to A:
+    A is owed 4.00
 
 ## License
 MIT
