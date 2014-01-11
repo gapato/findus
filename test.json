@@ -1,0 +1,20 @@
+[
+  {
+    "creditor": "A",
+    "amount": 10,
+    "debtors": [
+      "A",
+      "B"
+    ],
+    "comment": "payment 1"
+  },
+  {
+    "creditor": "B",
+    "amount": 2,
+    "debtors": [
+      "A",
+      "B"
+    ],
+    "comment": "payment 2"
+  }
+]
