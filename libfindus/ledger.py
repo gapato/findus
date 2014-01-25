@@ -104,8 +104,37 @@ class Ledger:
         self.people = sorted(self.people.values(), key=lambda p:p.balance)
         l = list(self.people)
 
+
         for p in l:
             p._tmp_balance = p.balance
+
+        done = len(l) <= 1
+
+        # Look for perfect matches first
+        if not done:
+            i_start = 0
+            i_end = len(l) - 1
+            exclude = []
+
+            while i_start < i_end:
+                cur_debtor   = l[i_start]
+                cur_creditor = l[i_end]
+
+                if abs(cur_debtor._tmp_balance + cur_creditor._tmp_balance) < 1e-14:
+                    cur_debtor.transfers.append({'to':cur_creditor.name,
+                                                 'amount':cur_creditor._tmp_balance})
+                    cur_debtor._tmp_balance = cur_creditor._tmp_balance = 0
+                    exclude.append(cur_debtor)
+                    exclude.append(cur_creditor)
+                    i_start += 1
+                    i_end -= 1
+
+                elif -cur_debtor._tmp_balance > cur_creditor._tmp_balance:
+                    i_start += 1
+                else:
+                    i_end -= 1
+
+            l = list(filter(lambda p:p not in exclude, l))
 
         done = len(l) <= 1
 
@@ -119,7 +148,7 @@ class Ledger:
                     logger.warn('Balancing error: {}'.format(start._tmp_balance))
                 break
 
-            if -start._tmp_balance == end._tmp_balance:
+            if abs(start._tmp_balance + end._tmp_balance) < 1e-14:
                 start.transfers.append({'to':end.name, 'amount':end._tmp_balance})
                 start._tmp_balance = end._tmp_balance = 0
                 l = l[1:-1]
