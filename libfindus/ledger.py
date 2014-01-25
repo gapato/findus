@@ -9,7 +9,7 @@ class Payment:
         self.creditor = info['creditor']
         self.debtors = info['debtors']
         if len(self.debtors) == 0:
-            error('Payment cannot be made to no one')
+            logger.error('Payment cannot be made to no one')
             raise ValueError
         self.amount = info['amount']
         self.share = self.amount/len(self.debtors)
