@@ -40,6 +40,9 @@ class Person:
         return { 'name':self.name, 'balance':self.balance, 'own_share':self.own_share,
                  'transfers': self.transfers }
 
+    def __repr__(self):
+        return u'<Person (name={0}, balance={1})'.format(self.name, self.balance)
+
 class Ledger:
 
     def __init__(self, obj):
