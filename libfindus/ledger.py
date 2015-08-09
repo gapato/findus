@@ -2,7 +2,7 @@ from simplejson import load, loads, dumps
 import logging
 logger = logging.getLogger('cli.libfindus')
 
-class Payment:
+class Payment(object):
 
     def __init__(self, info):
         self.comment = info['comment']
@@ -14,7 +14,7 @@ class Payment:
         self.amount = info['amount']
         self.share = self.amount/len(self.debtors)
 
-class Debt:
+class Debt(object):
 
     def __init__(self, debtor, creditor, amount=0, comment=None):
         self.debtor = debtor
@@ -28,7 +28,7 @@ class Debt:
     def __repr__(self):
         return '{0} ({1})> {2}'.format(self.debtor, self.amount, self.creditor)
 
-class Person:
+class Person(object):
 
     def __init__(self, name):
         self.name = name
@@ -43,7 +43,7 @@ class Person:
     def __repr__(self):
         return u'<Person (name={0}, balance={1})'.format(self.name, self.balance)
 
-class Ledger:
+class Ledger(object):
 
     def __init__(self, obj):
         if obj.__class__ == str:
